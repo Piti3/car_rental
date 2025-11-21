@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\ClientProfileApiController;
 |--------------------------------------------------------------------------
 */
 
-// ===== PUBLICZNE ENDPOINTY (bez autoryzacji) =====
+// ===== PUBLICZNE ENDPOINTY =====
 
 // Autoryzacja
 Route::prefix('auth')->group(function () {
@@ -20,19 +20,21 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-// Samochody (publiczny dostęp - przeglądanie)
+// Samochody (Przeglądanie)
 Route::prefix('cars')->group(function () {
+    // Specyficzne trasy przed parametrem {id}
     Route::get('/available', [CarApiController::class, 'available']);
+    
     Route::get('/', [CarApiController::class, 'index']);
     Route::get('/{id}', [CarApiController::class, 'show']);
     Route::get('/{id}/availability', [CarApiController::class, 'availability']);
 });
 
-// ===== CHRONIONE ENDPOINTY (wymagają JWT tokenu) =====
+// ===== CHRONIONE ENDPOINTY (JWT) =====
 
-Route::middleware(['jwt'])->group(function () {
+Route::middleware(['jwt'])->group(function () { // Upewnij się, że masz alias 'jwt' lub użyj 'auth:api'
     
-    // Autoryzacja (zalogowany)
+    // Autoryzacja (Zalogowany)
     Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/refresh', [AuthController::class, 'refresh']);
@@ -42,25 +44,22 @@ Route::middleware(['jwt'])->group(function () {
     // Profil klienta
     Route::prefix('profile')->group(function () {
         Route::get('/', [ClientProfileApiController::class, 'show']);
-        Route::put('/', [ClientProfileApiController::class, 'update']);
+        Route::put('/', [ClientProfileApiController::class, 'update']);         // REST: PUT /profile
         Route::put('/password', [ClientProfileApiController::class, 'updatePassword']);
         Route::delete('/', [ClientProfileApiController::class, 'destroy']);
     });
 
-    // Rezerwacje (klient)
+    // Rezerwacje (Klient)
     Route::prefix('reservations')->group(function () {
-        // ✅ Najpierw definicje GET z konkretną ścieżką
         Route::get('/check-availability', [ReservationApiController::class, 'checkAvailability']);
         
-        // ✅ Potem GET, POST, PUT z parametrem {id}
         Route::get('/', [ReservationApiController::class, 'index']);
-        Route::post('/', [ReservationApiController::class, 'store']);
+        Route::post('/', [ReservationApiController::class, 'store']);           // REST: POST /reservations
         Route::get('/{id}', [ReservationApiController::class, 'show']);
         Route::put('/{id}/cancel', [ReservationApiController::class, 'cancel']);
     });
 
-    // ===== ENDPOINTY TYLKO DLA ADMINA =====
-    
+    // ===== API DLA ADMINA =====
     Route::middleware(['admin'])->prefix('api-admin')->group(function () {
         Route::put('/reservations/{id}/approve', [ReservationApiController::class, 'approve']);
     });

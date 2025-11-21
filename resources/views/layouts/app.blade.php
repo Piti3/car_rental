@@ -40,7 +40,7 @@
                             <a href="{{ route('client.reservations.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                                 Moje rezerwacje
                             </a>
-                            <a href="{{ route('client.profile') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
+                            <a href="{{ route('client.profile.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                                 Mój profil
                             </a>
                         @endif

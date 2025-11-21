@@ -11,10 +11,10 @@ use App\Http\Controllers\Web\Admin\AdminUserController;
 use App\Http\Controllers\Web\Client\ClientReservationController;
 use App\Http\Controllers\Web\Client\ClientProfileController;
 
-// Strona główna (publiczna)
+// Strona główna
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Autoryzacja
+// Autoryzacja (Goście)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -22,47 +22,66 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
+// Wylogowanie (dostępne tylko dla zalogowanych)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Samochody (publiczne)
+// Samochody (Publiczne)
 Route::prefix('cars')->name('cars.')->group(function () {
     Route::get('/', [CarViewController::class, 'index'])->name('index');
     Route::get('/{id}', [CarViewController::class, 'show'])->name('show');
 });
 
 // ======= PANEL ADMINA =======
-Route::middleware(['auth:web', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+// Prefix: /admin | Name: admin.
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     
-    Route::get('/reservations/pending', [AdminReservationController::class, 'pending'])->name('reservations.pending');
-    Route::get('/reservations/all', [AdminReservationController::class, 'all'])->name('reservations.all');
-    Route::post('/reservations/{id}/approve', [AdminReservationController::class, 'approve'])->name('reservations.approve');
-    Route::post('/reservations/{id}/cancel', [AdminReservationController::class, 'cancel'])->name('reservations.cancel');
-    
-    Route::get('/cars', [AdminCarController::class, 'index'])->name('cars.index');
-    Route::get('/cars/create', [AdminCarController::class, 'create'])->name('cars.create');
-    Route::post('/cars', [AdminCarController::class, 'store'])->name('cars.store');
-    Route::get('/cars/{id}/edit', [AdminCarController::class, 'edit'])->name('cars.edit');
-    Route::put('/cars/{id}', [AdminCarController::class, 'update'])->name('cars.update');
-    Route::delete('/cars/{id}', [AdminCarController::class, 'destroy'])->name('cars.destroy');
-    
-    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
-    Route::get('/users/{id}', [AdminUserController::class, 'show'])->name('users.show');
-    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+    // Rezerwacje
+    Route::prefix('reservations')->name('reservations.')->group(function () {
+        Route::get('/pending', [AdminReservationController::class, 'pending'])->name('pending');
+        Route::get('/all', [AdminReservationController::class, 'all'])->name('all');
+        Route::post('/{id}/approve', [AdminReservationController::class, 'approve'])->name('approve');
+        Route::post('/{id}/cancel', [AdminReservationController::class, 'cancel'])->name('cancel');
+    });
+
+    // Samochody (CRUD)
+    Route::prefix('cars')->name('cars.')->group(function () {
+        Route::get('/', [AdminCarController::class, 'index'])->name('index');
+        Route::get('/create', [AdminCarController::class, 'create'])->name('create');
+        Route::post('/', [AdminCarController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AdminCarController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AdminCarController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminCarController::class, 'destroy'])->name('destroy');
+    });
+
+    // Użytkownicy
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [AdminUserController::class, 'index'])->name('index');
+        Route::get('/{id}', [AdminUserController::class, 'show'])->name('show');
+        Route::delete('/{id}', [AdminUserController::class, 'destroy'])->name('destroy');
+    });
 });
 
-// ======= PANEL KLIENTA (WEB) =======
-Route::middleware(['auth'])->prefix('dashboard')->name('client.')->group(function () {  // ← ZMIENIONE z / na /dashboard
-    
+// ======= PANEL KLIENTA =======
+// Prefix: /dashboard | Name: client.
+Route::middleware(['auth'])->prefix('dashboard')->name('client.')->group(function () {
+
     // Rezerwacje klienta
-    Route::get('/reservations', [ClientReservationController::class, 'index'])->name('reservations.index');  // ← /dashboard/reservations
-    Route::get('/reservations/create', [ClientReservationController::class, 'create'])->name('reservations.create');  // ← /dashboard/reservations/create
-    Route::post('/reservations-create', [ClientReservationController::class, 'store'])->name('reservations.store');  // ← /dashboard/reservations-create
-    Route::post('/reservations/{id}/cancel', [ClientReservationController::class, 'cancel'])->name('reservations.cancel');  // ← /dashboard/reservations/{id}/cancel
-    
+    // URL: /dashboard/reservations...
+    Route::prefix('reservations')->name('reservations.')->group(function () {
+        Route::get('/', [ClientReservationController::class, 'index'])->name('index');      // Lista
+        Route::get('/create', [ClientReservationController::class, 'create'])->name('create'); // Formularz
+        Route::post('/', [ClientReservationController::class, 'store'])->name('store');     // Akcja zapisu (zamiast /reservations-create)
+        Route::post('/{id}/cancel', [ClientReservationController::class, 'cancel'])->name('cancel');
+    });
+
     // Profil klienta
-    Route::get('/profile', [ClientProfileController::class, 'show'])->name('profile');  // ← /dashboard/profile
-    Route::put('/profile-update', [ClientProfileController::class, 'update'])->name('profile.update');  // ← /dashboard/profile-update
-    Route::put('/profile-password', [ClientProfileController::class, 'updatePassword'])->name('profile.password');  // ← /dashboard/profile-password
-    Route::delete('/profile-delete', [ClientProfileController::class, 'destroy'])->name('profile.destroy');  // ← /dashboard/profile-delete
+    // URL: /dashboard/profile...
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ClientProfileController::class, 'show'])->name('index');           // Widok
+        Route::put('/', [ClientProfileController::class, 'update'])->name('update');        // Aktualizacja danych (zamiast /profile-update)
+        Route::put('/password', [ClientProfileController::class, 'updatePassword'])->name('password'); // Zmiana hasła
+        Route::delete('/', [ClientProfileController::class, 'destroy'])->name('destroy');   // Usunięcie konta
+    });
 });
