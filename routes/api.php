@@ -28,11 +28,12 @@ Route::prefix('cars')->group(function () {
     Route::get('/', [CarApiController::class, 'index']);
     Route::get('/{id}', [CarApiController::class, 'show']);
     Route::get('/{id}/availability', [CarApiController::class, 'availability']);
+
 });
 
 // ===== CHRONIONE ENDPOINTY (JWT) =====
 
-Route::middleware(['jwt'])->group(function () { // Upewnij się, że masz alias 'jwt' lub użyj 'auth:api'
+Route::middleware(['jwt'])->group(function () { 
     
     // Autoryzacja (Zalogowany)
     Route::prefix('auth')->group(function () {
@@ -44,7 +45,7 @@ Route::middleware(['jwt'])->group(function () { // Upewnij się, że masz alias 
     // Profil klienta
     Route::prefix('profile')->group(function () {
         Route::get('/', [ClientProfileApiController::class, 'show']);
-        Route::put('/', [ClientProfileApiController::class, 'update']);         // REST: PUT /profile
+        Route::put('/', [ClientProfileApiController::class, 'update']);   
         Route::put('/password', [ClientProfileApiController::class, 'updatePassword']);
         Route::delete('/', [ClientProfileApiController::class, 'destroy']);
     });
@@ -54,7 +55,7 @@ Route::middleware(['jwt'])->group(function () { // Upewnij się, że masz alias 
         Route::get('/check-availability', [ReservationApiController::class, 'checkAvailability']);
         
         Route::get('/', [ReservationApiController::class, 'index']);
-        Route::post('/', [ReservationApiController::class, 'store']);           // REST: POST /reservations
+        Route::post('/', [ReservationApiController::class, 'store']);  
         Route::get('/{id}', [ReservationApiController::class, 'show']);
         Route::put('/{id}/cancel', [ReservationApiController::class, 'cancel']);
     });

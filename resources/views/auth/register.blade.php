@@ -9,8 +9,20 @@
             Zarejestruj się
         </h2>
 
-        <form id="register-form" class="space-y-6">
+        <form action="{{ route('register') }}" method="POST" class="space-y-6">
             @csrf
+
+            <!-- Wyświetlanie błędów -->
+            @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                    <strong class="font-bold">Uwaga!</strong>
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <div>
                 <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -20,11 +32,15 @@
                     type="text" 
                     id="name"
                     name="name" 
+                    value="{{ old('name') }}" 
                     required
                     autofocus
-                    class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-300"
+                    class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-300 @error('name') border-red-500 @enderror"
                     placeholder="Jan Kowalski"
                 >
+                @error('name')
+                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
@@ -35,10 +51,14 @@
                     type="email" 
                     id="email"
                     name="email" 
+                    value="{{ old('email') }}"
                     required
-                    class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-300"
+                    class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-300 @error('email') border-red-500 @enderror"
                     placeholder="twoj@email.com"
                 >
+                @error('email')
+                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
@@ -49,9 +69,13 @@
                     type="tel" 
                     id="phone"
                     name="phone" 
+                    value="{{ old('phone') }}"
                     class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-300"
                     placeholder="+48 123 456 789"
                 >
+                @error('phone')
+                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
@@ -63,9 +87,12 @@
                     id="password"
                     name="password" 
                     required
-                    class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-300"
+                    class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-300 @error('password') border-red-500 @enderror"
                     placeholder="Min. 8 znaków"
                 >
+                @error('password')
+                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
@@ -84,7 +111,7 @@
 
             <button 
                 type="submit"
-                class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+                class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold shadow-md"
             >
                 Zarejestruj się
             </button>
@@ -99,5 +126,4 @@
     </div>
 </div>
 
-<script src="{{ asset('js/auth.js') }}"></script>
 @endsection

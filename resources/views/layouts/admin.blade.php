@@ -12,7 +12,6 @@
 <body class="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen">
     
     <div class="flex min-h-screen">
-        <!-- Sidebar - CIEMNY -->
         <aside class="w-64 glass-dark border-r border-gray-700 flex-shrink-0">
             <div class="p-6">
                 <h2 class="text-2xl font-bold text-white mb-2">
@@ -74,7 +73,6 @@
         
         <!-- Main Content - CIEMNE TŁO -->
         <main class="flex-1 bg-gray-900/50">
-            <!--           ↑ DODANE ciemne tło -->
             
             <!-- Top Bar -->
             <header class="glass-dark border-b border-gray-700 px-8 py-4">

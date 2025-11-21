@@ -66,8 +66,9 @@
     </div>
     
     <!-- Car Grid -->
-    <div x-show="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <template x-for="car in filteredCars" :key="car.id">
+    <!-- Iterujemy po 'paginatedCars' -->
+    <div x-show="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[500px]">
+        <template x-for="car in paginatedCars" :key="car.id">
             <div 
                 @click="openCarDetails(car)"
                 class="glass rounded-xl overflow-hidden card-hover cursor-pointer animate-slide-up"
@@ -106,6 +107,45 @@
             </div>
         </template>
     </div>
+
+    <!-- Sekcja Przycisków Paginacji -->
+    <div x-show="!loading && totalPages > 1" class="mt-16 flex justify-between items-center w-full pb-8 px-2">
+        <!-- Przycisk Poprzednia  -->
+        <button 
+            @click="prevPage" 
+            :disabled="currentPage === 1"
+            class="px-6 py-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center gap-2 shadow-md font-semibold"
+        >
+            <span>&laquo;</span> Poprzednia
+        </button>
+
+        <!-- Numery stron  -->
+        <div class="flex gap-1 overflow-x-auto max-w-[200px] md:max-w-none px-2">
+            <template x-for="page in totalPages" :key="page">
+                <button 
+                    @click="goToPage(page)"
+                    x-text="page"
+                    :class="currentPage === page 
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105' 
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'"
+                    class="w-10 h-10 rounded-lg border flex-shrink-0 flex items-center justify-center transition font-medium hidden md:flex"
+                ></button>
+            </template>
+            <!-- Wersja mobilna licznika -->
+            <span class="md:hidden text-gray-600 dark:text-gray-400 font-medium">
+                Strona <span x-text="currentPage"></span> z <span x-text="totalPages"></span>
+            </span>
+        </div>
+
+        <!-- Przycisk Następna-->
+        <button 
+            @click="nextPage" 
+            :disabled="currentPage === totalPages"
+            class="px-6 py-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center gap-2 shadow-md font-semibold"
+        >
+            Następna <span>&raquo;</span>
+        </button>
+    </div>
     
     <!-- Popup Modal -->
     <div 
@@ -114,6 +154,7 @@
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
         class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style="display: none;"
         @click.self="closeCarDetails()"
     >
         <!-- Blur Background -->
@@ -221,6 +262,10 @@ function carGallery() {
             endDate: null,
         },
         
+        // --- Konfiguracja Paginacji ---
+        currentPage: 1,
+        itemsPerPage: 15, // Wyświetlamy max 15 aut
+        
         async init() {
             await this.loadCategories();
             await this.loadCars();
@@ -228,8 +273,8 @@ function carGallery() {
         
         async loadCategories() {
             try {
+                // Tutaj uderzamy do endpointu, który zwraca JSON
                 const response = await axios.get('/cars');
-                // Wyciągnij unikalne kategorie z samochodów
                 const uniqueCategories = [...new Map(response.data.data.map(car => 
                     [car.category.id, car.category]
                 )).values()];
@@ -242,8 +287,10 @@ function carGallery() {
         async loadCars() {
             this.loading = true;
             try {
+                // Tutaj uderzamy do endpointu, który zwraca JSON
                 const response = await axios.get('/cars');
                 this.cars = response.data.data;
+                this.currentPage = 1; 
             } catch (error) {
                 console.error('Błąd ładowania samochodów:', error);
                 alert('Nie udało się załadować samochodów');
@@ -254,27 +301,62 @@ function carGallery() {
         
         filterCategory(categoryId) {
             this.filters.category = categoryId;
+            this.currentPage = 1; 
         },
         
+        // Pobiera WSZYSTKIE pasujące auta
         get filteredCars() {
             if (this.filters.category === null) {
                 return this.cars;
             }
             return this.cars.filter(car => car.category_id === this.filters.category);
         },
+
+        // Zwraca x pojazdów
+        get paginatedCars() {
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            return this.filteredCars.slice(start, end);
+        },
+
+        get totalPages() {
+            return Math.ceil(this.filteredCars.length / this.itemsPerPage);
+        },
+
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+                this.scrollToTop();
+            }
+        },
+
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.scrollToTop();
+            }
+        },
+
+        goToPage(page) {
+            this.currentPage = page;
+            this.scrollToTop();
+        },
+
+        scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
         
         openCarDetails(car) {
             this.selectedCar = car;
-            document.body.style.overflow = 'hidden'; // Disable scroll
+            document.body.style.overflow = 'hidden'; 
         },
         
         closeCarDetails() {
             this.selectedCar = null;
-            document.body.style.overflow = ''; // Enable scroll
+            document.body.style.overflow = ''; 
         },
         
         reserveCar(carId) {
-            // TODO: Redirect to reservation page
             window.location.href = `/cars/${carId}/`;
         },
         
@@ -293,6 +375,7 @@ function carGallery() {
                     }
                 });
                 this.cars = response.data.data;
+                this.currentPage = 1; // Reset po wyszukiwaniu
             } catch (error) {
                 console.error('Błąd wyszukiwania:', error);
                 alert('Nie udało się wyszukać samochodów');
