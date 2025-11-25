@@ -93,7 +93,7 @@
                     class="w-10 h-10 rounded-lg border flex-shrink-0 flex items-center justify-center transition font-medium hidden md:flex"
                 ></button>
             </template>
-            <!-- Wersja mobilna licznika -->
+            <!-- Wersja mobilna -->
             <span class="md:hidden text-gray-600 dark:text-gray-400 font-medium">
                 Strona <span x-text="currentPage"></span> z <span x-text="totalPages"></span>
             </span>
