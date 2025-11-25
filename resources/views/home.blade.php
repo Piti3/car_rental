@@ -264,7 +264,7 @@ function carGallery() {
         
         // --- Konfiguracja Paginacji ---
         currentPage: 1,
-        itemsPerPage: 15, // Wyświetlamy max 15 aut
+        itemsPerPage: 12, // Wyświetlamy max 15 aut
         
         async init() {
             await this.loadCategories();
