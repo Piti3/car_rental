@@ -125,19 +125,10 @@
             &laquo; Poprzednia
         </button>
 
-        <div class="flex gap-1 overflow-x-auto px-2">
-            <template x-for="page in totalPages" :key="page">
-                <button 
-                    @click="goToPage(page)"
-                    x-text="page"
-                    :class="currentPage === page 
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-md scale-105' 
-                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'"
-                    class="w-10 h-10 rounded-lg border flex-shrink-0 flex items-center justify-center transition font-medium hidden md:flex"
-                ></button>
-            </template>
-            <span class="md:hidden text-gray-600 dark:text-gray-400 font-medium">
-                Strona <span x-text="currentPage"></span> z <span x-text="totalPages"></span>
+        <!-- Tylko tekst, bez kafelków -->
+        <div class="flex items-center justify-center">
+            <span class="text-gray-600 dark:text-gray-400 font-medium text-lg">
+                Strona <span x-text="currentPage" class="font-bold text-blue-600"></span> z <span x-text="totalPages" class="font-bold"></span>
             </span>
         </div>
 

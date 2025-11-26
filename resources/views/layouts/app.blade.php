@@ -12,7 +12,7 @@
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
     
     <!-- Navigation -->
-    <nav class="glass sticky top-0 z-50 shadow-lg">
+    <nav class="glass sticky top-0 z-50 shadow-lg" x-data="{ mobileMenuOpen: false }">
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
@@ -20,8 +20,8 @@
                     🚗 Car Rental
                 </a>
                 
-                <!-- Menu -->
-                <div class="flex items-center space-x-6">
+                <!-- Desktop Menu (widoczne od LG - 1024px) -->
+                <div class="hidden lg:flex items-center space-x-6">
                     <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                         Strona główna
                     </a>
@@ -45,18 +45,18 @@
                             </a>
                         @endif
                         <!-- User Avatar -->
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                            {{ substr(auth()->user()->name, 0, 1) }}
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            </div>
+                            
+                            <form action="{{ route('logout') }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="text-gray-700 dark:text-gray-300 hover:text-red-600 transition">
+                                    Wyloguj
+                                </button>
+                            </form>
                         </div>
-                        <form action="{{ route('logout') }}" method="POST"
-                        
-                        <form action="{{ route('logout') }}" method="POST" class="inline">
-                            @csrf
-                            <button type="submit" class="text-gray-700 dark:text-gray-300 hover:text-red-600 transition">
-                                Wyloguj
-                            </button>
-                        </form>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                             Zaloguj się
@@ -66,6 +66,77 @@
                         </a>
                     @endauth
                 </div>
+
+                <!-- Mobile Menu Button (widoczny poniżej LG - 1024px) -->
+                <div class="lg:hidden flex items-center">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" style="display: none;" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel (widoczny poniżej LG) -->
+        <div x-show="mobileMenuOpen" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-2"
+             class="lg:hidden glass border-t border-gray-200 dark:border-gray-700" 
+             style="display: none;">
+            
+            <div class="px-4 py-4 flex flex-col space-y-4">
+                <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition font-medium">
+                    Strona główna
+                </a>
+                <a href="{{ route('cars.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition font-medium">
+                    Samochody
+                </a>
+
+                @auth
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            </div>
+                            <span class="text-gray-800 dark:text-white font-semibold">{{ auth()->user()->name }}</span>
+                        </div>
+
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="block text-red-600 font-semibold hover:text-red-700 transition mb-3">
+                                Panel Admin
+                            </a>
+                        @else
+                            <a href="{{ route('client.reservations.index') }}" class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 transition mb-3">
+                                Moje rezerwacje
+                            </a>
+                            <a href="{{ route('client.profile.index') }}" class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 transition mb-3">
+                                Mój profil
+                            </a>
+                        @endif
+
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="text-gray-700 dark:text-gray-300 hover:text-red-600 transition w-full text-left">
+                                Wyloguj się
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex flex-col space-y-3">
+                        <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
+                            Zaloguj się
+                        </a>
+                        <a href="{{ route('register') }}" class="text-blue-600 font-semibold hover:text-blue-700 transition">
+                            Zarejestruj
+                        </a>
+                    </div>
+                @endauth
             </div>
         </div>
     </nav>

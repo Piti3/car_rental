@@ -19,7 +19,6 @@ class CarResource extends JsonResource
             'daily_price' => (float) $this->daily_price,
             'image_path' => $this->image_path,
             
-            // Dodajemy category_id na głównym poziomie dla łatwiejszego filtrowania w JS
             'category_id' => $this->category_id,
 
             'category' => [
@@ -27,16 +26,15 @@ class CarResource extends JsonResource
                 'name' => $this->category?->name,
             ],
             
-            // Tura najważniejsza zmiana: Dodano brakujące pola specyfikacji
             'specification' => [
                 'id' => $this->specification?->id,
-                'horsepower' => $this->specification?->horsepower,       // Moc (KM)
-                'fuel_type' => $this->specification?->fuel_type,         // Paliwo
-                'engine_capacity' => $this->specification?->engine_capacity, // Pojemność
-                'acceleration_0_100' => $this->specification?->acceleration_0_100, // 0-100 km/h
+                'horsepower' => $this->specification?->horsepower,
+                'fuel_type' => $this->specification?->fuel_type,
+                'engine_capacity' => $this->specification?->engine_capacity,
+                'acceleration_0_100' => $this->specification?->acceleration_0_100,
                 'seats' => $this->specification?->seats,
                 'transmission' => $this->specification?->transmission,
-                'fun_fact' => $this->specification?->fun_fact,           // Ciekawostka (dla modala)
+                'fun_fact' => $this->specification?->fun_fact,
             ],
             
             'created_at' => $this->created_at ? $this->created_at->toIso8601String() : null,
