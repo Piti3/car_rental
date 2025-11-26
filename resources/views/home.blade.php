@@ -253,7 +253,6 @@ function carGallery() {
         
         async loadCategories() {
             try {
-                // FIX 1: Używamy url() dla kategorii
                 const apiUrl = '{{ url("/api/cars") }}';
                 const response = await axios.get(apiUrl);
                 const rawData = response.data.data || response.data;
@@ -272,7 +271,6 @@ function carGallery() {
         async loadCars() {
             this.loading = true;
             try {
-                // FIX 2: Używamy url() dla aut
                 const apiUrl = '{{ url("/api/cars") }}';
                 console.log('Ładowanie aut z:', apiUrl);
                 const response = await axios.get(apiUrl);
@@ -292,7 +290,6 @@ function carGallery() {
             }
         },
         
-        // FIX 3: Logika filtrowania po kategorii (bezpieczna)
         filterCategory(categoryId) {
             this.filters.category = categoryId;
             this.currentPage = 1;
@@ -339,14 +336,13 @@ function carGallery() {
                     if (error.response.status === 404) {
                         msg += '\nNie znaleziono endpointu API.';
                     } else if (error.response.data && error.response.data.message) {
-                        // Komunikat z backendu (np. walidacja)
+                        // Komunikat z backendu
                         msg += '\n' + error.response.data.message;
                     }
                 } else if (error.request) {
                     // Brak odpowiedzi z serwera
                     msg += '\nBrak odpowiedzi z serwera.';
                 } else {
-                    // Inny błąd
                     msg += '\n' + error.message;
                 }
                 
