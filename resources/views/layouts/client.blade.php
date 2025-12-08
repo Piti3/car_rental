@@ -21,10 +21,10 @@
                     🚗 <span>Car Rental</span> 
                 </a>
                 
-                <!-- 2. Desktop Menu (Widoczne od LG - 1024px) -->
+                <!-- 2. Desktop Menu-->
                 <div class="hidden lg:flex items-center">
                     
-                    <!-- Linki nawigacyjne (Bez pogrubienia, styl jak w app.blade.php) -->
+                    <!-- Linki nawigacyjne -->
                     <div class="flex items-center space-x-6">
                         <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                             Strona główna
@@ -58,7 +58,6 @@
                 </div>
 
                 <!-- 3. Mobile Menu Button -->
-                <!-- Prosty przycisk bez avatara obok -->
                 <div class="lg:hidden flex items-center">
                     <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 focus:outline-none">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,9 +94,6 @@
 
                 <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                     Strona główna
-                </a>
-                <a href="{{ route('cars.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
-                    Oferta aut
                 </a>
                 <a href="{{ route('client.reservations.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                     Moje rezerwacje

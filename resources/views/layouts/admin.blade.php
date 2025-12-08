@@ -25,7 +25,7 @@
 
     <div class="flex min-h-screen relative">
         
-        <!-- Sidebar Overlay (Mobile only) -->
+        <!-- Sidebar Overlay-->
         <div x-show="sidebarOpen" 
              @click="sidebarOpen = false"
              x-transition:enter="transition-opacity ease-linear duration-300"

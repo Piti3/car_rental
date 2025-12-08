@@ -20,7 +20,7 @@
                     🚗 Car Rental
                 </a>
                 
-                <!-- Desktop Menu (widoczne od LG - 1024px) -->
+                <!-- Desktop Menu -->
                 <div class="hidden lg:flex items-center space-x-6">
                     <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                         Strona główna
@@ -67,7 +67,7 @@
                     @endauth
                 </div>
 
-                <!-- Mobile Menu Button (widoczny poniżej LG - 1024px) -->
+                <!-- Mobile Menu Button -->
                 <div class="lg:hidden flex items-center">
                     <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 focus:outline-none">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <!-- Mobile Menu Panel (widoczny poniżej LG) -->
+        <!-- Mobile Menu Panel -->
         <div x-show="mobileMenuOpen" 
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 -translate-y-2"
@@ -92,7 +92,7 @@
             
                 @auth
                     <div class="px-4 py-4 flex flex-col space-y-4">
-                <!-- Info o użytkowniku w menu mobilnym -->
+                <!-- Info o użytkowniku  -->
                 <div class="pb-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
                         {{ substr(auth()->user()->name, 0, 1) }}
