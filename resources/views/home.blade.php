@@ -125,7 +125,7 @@
             &laquo; Poprzednia
         </button>
 
-        <!-- Tylko tekst, bez kafelków -->
+        <!-- numery stron -->
         <div class="flex items-center justify-center">
             <span class="text-gray-600 dark:text-gray-400 font-medium text-lg">
                 Strona <span x-text="currentPage" class="font-bold text-blue-600"></span> z <span x-text="totalPages" class="font-bold"></span>

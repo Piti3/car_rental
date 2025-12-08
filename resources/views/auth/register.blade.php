@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-md mx-auto mt-12">
-    <div class="glass dark:glass-dark rounded-2xl p-8 shadow-lg">
+    <div class="glass rounded-2xl p-8 shadow-lg">
         <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">
             Zarejestruj się
         </h2>

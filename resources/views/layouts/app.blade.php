@@ -87,25 +87,29 @@
              x-transition:leave="transition ease-in duration-150"
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-2"
-             class="lg:hidden glass border-t border-gray-200 dark:border-gray-700" 
+             class="lg:hidden glass border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800" 
              style="display: none;">
             
-            <div class="px-4 py-4 flex flex-col space-y-4">
-                <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition font-medium">
+                @auth
+                    <div class="px-4 py-4 flex flex-col space-y-4">
+                <!-- Info o użytkowniku w menu mobilnym -->
+                <div class="pb-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                        {{ substr(auth()->user()->name, 0, 1) }}
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800 dark:text-white">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-blue-500">{{ auth()->user()->email }}</p>
+                    </div>
+                </div>
+
+                <div class="px-4 py-4 flex flex-col space-y-4">
+                <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                     Strona główna
                 </a>
-                <a href="{{ route('cars.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition font-medium">
+                <a href="{{ route('cars.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                     Samochody
                 </a>
-
-                @auth
-                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                {{ substr(auth()->user()->name, 0, 1) }}
-                            </div>
-                            <span class="text-gray-800 dark:text-white font-semibold">{{ auth()->user()->name }}</span>
-                        </div>
 
                         @if(auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="block text-red-600 font-semibold hover:text-red-700 transition mb-3">
@@ -120,15 +124,16 @@
                             </a>
                         @endif
 
+                    <div class="pt-2 border-t border-gray-100 dark:border-gray-700">
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="text-gray-700 dark:text-gray-300 hover:text-red-600 transition w-full text-left">
-                                Wyloguj się
-                            </button>
+                                <button type="submit" class="text-gray-700 dark:text-gray-300 hover:text-red-600 transition w-full text-left">
+                                    Wyloguj się
+                                </button>
                         </form>
                     </div>
                 @else
-                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex flex-col space-y-3">
+                    <div class="px-4 py-4 flex flex-col space-y-4">
                         <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition">
                             Zaloguj się
                         </a>
