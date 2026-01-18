@@ -84,3 +84,16 @@ exit
 ```
 
 ---
+
+## 🌐 Application Access
+
+| Service | URL | Login | Password |
+|----------|-----|--------|-----------|
+| **Web Application** | [http://localhost:8080](http://localhost:8080) | – | – |
+| **API Documentation (Swagger)** | [http://localhost:8080/api/documentation](http://localhost:8080/api/documentation) | – | – |
+| **Database (PgAdmin)** | [http://localhost:5050](http://localhost:5050) | [admin@example.com](mailto:admin@example.com) | `admin` |
+| **Queues (RabbitMQ UI)** | [http://localhost:15672](http://localhost:15672) | `guest` | `guest` |
+
+
+---
+
