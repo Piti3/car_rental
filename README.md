@@ -23,3 +23,64 @@ The entire project is containerized using **Docker**.
 - **Docker & Docker Compose:** Provide identical runtime environments for all developers, avoiding the *"works on my machine"* issue.
 
 ---
+
+## 🚀 Setup Instructions
+
+**Prerequisites:**  
+Installed **Docker** and **Git**.
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Piti3/car_rental.git
+cd car_rental
+```
+
+### 2. Environment configuration
+Copy the example `.env` file:
+```bash
+cp .env.example .env
+```
+Make sure database settings match those in `docker-compose.yml`, e.g.:
+```
+DB_HOST=postgres
+```
+
+### 3. Run the containers
+Build and start the environment (may take a few minutes on first run):
+```bash
+docker-compose up -d --build
+```
+
+### 4. Dependencies installation and configuration (inside the container)
+Access the application container:
+```bash
+docker-compose exec app sh
+```
+
+Run the following commands inside (`root@...:/var/www/html #`):
+```bash
+# 1. Fix file permissions for logs and cache
+chmod -R 777 storage bootstrap/cache
+
+# 2. Install PHP dependencies
+composer install
+
+# 3. Generate the encryption key
+php artisan key:generate
+
+# 4. Run database migrations
+php artisan migrate
+
+# 5. (Optional) Seed the database with sample data
+php artisan db:seed
+
+# 6. Generate Swagger documentation
+php artisan l5-swagger:generate
+```
+
+Exit the container:
+```bash
+exit
+```
+
+---
