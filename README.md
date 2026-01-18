@@ -99,6 +99,12 @@ exit
 
 ## 📱 Screenshots
 
+![login_page](/screenshots/login_page.jpg)
+![register_page](/screenshots/register_page.jpg)
+![main_dashboard](/screenshots/main_dashboard.jpg)
+![cars_page](/screenshots/cars_page.jpg)
+![customer_dashboard](/screenshots/customer_dashboard.jpg)
+![admin_dashboard](/screenshots/admin_dashboard.jpg)
 
 ---
 
