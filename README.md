@@ -99,3 +99,11 @@ exit
 
 ## 📱 Screenshots
 
+
+---
+
+## 🗺️ ERD Diagram
+
+![Diagram ERD](/screenshots/Diagram_ERD.png)
+
+
